@@ -7,11 +7,18 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.0.5"
+    "@onaug6th/vue3-context-menu": "^0.0.2",
+    "dayjs": "^1.10.4",
+    "vue": "^3.0.5",
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0-0"
   },
   "devDependencies": {
+    "@types/node": "^15.0.1",
     "@vitejs/plugin-vue": "^1.2.1",
     "@vue/compiler-sfc": "^3.0.5",
+    "less": "^3.0.4",
+    "less-loader": "^5.0.0",
     "typescript": "^4.1.3",
     "vite": "^2.1.5",
     "vue-tsc": "^0.0.24"

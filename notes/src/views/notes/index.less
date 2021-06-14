@@ -1,0 +1,48 @@
+.notes {
+  padding: 15px;
+
+  &-header {
+    margin-bottom: 10px;
+
+    button {
+      display: inline-block;
+      line-height: 1;
+      min-height: 35px;
+      white-space: nowrap;
+      cursor: pointer;
+      background: #fff;
+      border: 1px solid #dcdfe6;
+      color: #606266;
+      -webkit-appearance: none;
+      text-align: center;
+      box-sizing: border-box;
+      outline: none;
+      margin: 0;
+      transition: 0.1s;
+      font-weight: 500;
+      padding: 8px 20px;
+      font-size: 14px;
+      border-radius: 4px;
+    }
+  }
+}
+
+.note-item {
+  cursor: pointer;
+  margin-bottom: 15px;
+
+  &__content {
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 50px;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  &__date {
+    text-align: right;
+    color: #666;
+    font-size: 13px;
+  }
+}
