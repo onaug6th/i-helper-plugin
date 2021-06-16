@@ -1,16 +1,14 @@
 <template>
   <div class="notes">
     <div class="notes-header">
-      <button type="primary"
-              size="mini"
-              @click="addNote">
-              新增
-      </button>
+      <button @click="addNote"
+              title="新增便笺">新增</button>
     </div>
     <div v-for="(note, noteIndex) in state.notes"
          class="note-item"
          shadow="hover"
          :key="noteIndex"
+         title="查看便笺"
          @click="openNoteWin(note)"
          @contextmenu.prevent="contextMenu($event, note, noteIndex)">
       <div>
@@ -18,9 +16,13 @@
              class="note-item__content">
         </div>
         <div class="note-item__date">
-          {{ note.updatedAt }}
+          {{ formatDate(note.updatedAt) }}
         </div>
       </div>
+    </div>
+    <div v-if="!state.notes.length"
+         class="notes-empty">
+      暂无内容哦
     </div>
   </div>
 </template>
@@ -44,10 +46,7 @@ export default defineComponent({
      */
     function getAllNotes(): void {
       const data = iHelper.db.findAndSort({}, { updatedAt: -1 });
-      state.notes = data.map((note) => {
-        note.updatedAt = dayjs(note.updatedAt).format("YYYY-MM-DD hh:mm:ss");
-        return note;
-      });
+      state.notes = data;
     }
 
     /**
@@ -93,8 +92,8 @@ export default defineComponent({
      * @param noteIndex
      */
     function deleteNote(note: NoteItem, noteIndex: number): void {
-      //  通知主进程关闭便笺的窗口
-      iHelper.send(note.winId, "notes-note-close");
+      //  关闭被删除便笺的窗口
+      iHelper.send(note.winId, "notes-note-delete");
       //  列表中移除
       delateNoteFormList(noteIndex);
       //  数据库中移除
@@ -134,6 +133,16 @@ export default defineComponent({
     }
 
     /**
+     * 日期格式化
+     * @param date
+     */
+    function formatDate(date) {
+      const dayObj = dayjs(date);
+      const isCurrentYear = dayObj.isSame(new Date().getFullYear(), "year");
+      return dayObj.format(`${isCurrentYear ? "YYYY年" : ""}M月D日`);
+    }
+
+    /**
      * 监听事件
      */
     function onEvent() {
@@ -166,6 +175,7 @@ export default defineComponent({
       openNote,
       openNoteWin,
       contextMenu,
+      formatDate,
     };
   },
 });

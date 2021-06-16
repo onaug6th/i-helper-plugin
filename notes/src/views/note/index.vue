@@ -20,7 +20,7 @@ export default defineComponent({
     onBeforeMount(() => {
       initEditorContent();
 
-      iHelper.on('notes-note-close', () => {
+      iHelper.on('notes-note-delete', () => {
         //  关闭此便笺
         iHelper.close();
       });
