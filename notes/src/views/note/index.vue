@@ -12,28 +12,26 @@ export default defineComponent({
     Editor,
   },
   setup() {
-    let id: string;
     const editContent = ref("");
     const route = useRoute();
-    const routeId = route.query.id as string;
-    const { fatherId } = iHelper.getWinInfo();
+    const _id = route.query._id as string;
+    const { fatherViewId } = iHelper.getWinInfo();
 
     onBeforeMount(() => {
       initEditorContent();
 
       iHelper.on('notes-note-close', () => {
         //  关闭此便笺
-        //  @TODO
+        iHelper.close();
       });
     });
 
     /**
-     * 生成编辑器内容
+     * 初始化编辑器内容
      */
     function initEditorContent() {
-      if (routeId) {
-        id = routeId;
-        getNoteItem(routeId);
+      if (_id) {
+        getNoteItem(_id);
       } else {
         alert("不存在此便笺");
       }
@@ -41,12 +39,13 @@ export default defineComponent({
 
     /**
      * 获取当前便笺内容
-     * @param id
+     * @param _id
      */
-    function getNoteItem(id: string) {
-      const info = iHelper.db.findOne({ id });
-      if (!info) return;
-      editContent.value = info.content;
+    function getNoteItem(_id: string) {
+      const info = iHelper.db.findOne({ _id });
+      if (info) {
+        editContent.value = info.content;
+      }
     }
 
     /**
@@ -55,21 +54,22 @@ export default defineComponent({
      */
     function changeEditContent(content: string) {
       editContent.value = content;
-      if (!id) {
+      if (!_id) {
         return false;
       }
       iHelper.db.update(
         {
-          id,
+          _id,
         },
         {
-          id,
+          _id,
           content,
         }
       );
+
       //  通知主面板更新便笺内容
-      iHelper.send(fatherId, "notes-note-update", {
-        id,
+      iHelper.send(fatherViewId, "notes-note-update", {
+        _id,
         content,
       });
     }
@@ -81,12 +81,12 @@ export default defineComponent({
       if (!editContent.value) {
         //  如果内容为空就直接从数据库删除
         iHelper.db.remove({
-          id,
+          _id,
         });
 
-        //  通知主面板更新便笺内容
-        iHelper.send(fatherId, "notes-note-delete", {
-          id
+        //  通知主面板删除此条便笺
+        iHelper.send(fatherViewId, "notes-note-delete", {
+          _id
         });
       }
     }

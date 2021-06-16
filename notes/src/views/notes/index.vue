@@ -1,20 +1,24 @@
 <template>
   <div class="notes">
     <div class="notes-header">
-      <button type="primary" size="mini" @click="addNote">新增</button>
+      <button type="primary"
+              size="mini"
+              @click="addNote">
+              新增
+      </button>
     </div>
-    <div
-      v-for="(note, noteIndex) in state.notes"
-      class="note-item"
-      shadow="hover"
-      :key="noteIndex"
-      @click="openNoteWin(note)"
-      @contextmenu.prevent="contextMenu($event, note, noteIndex)"
-    >
+    <div v-for="(note, noteIndex) in state.notes"
+         class="note-item"
+         shadow="hover"
+         :key="noteIndex"
+         @click="openNoteWin(note)"
+         @contextmenu.prevent="contextMenu($event, note, noteIndex)">
       <div>
-        <div class="note-item__content" v-html="note.content || '新便笺'"></div>
+        <div v-html="note.content || '新的便笺'"
+             class="note-item__content">
+        </div>
         <div class="note-item__date">
-          {{ dayjs(note.updatedAt).format("YYYY-MM-DD hh:mm:ss") }}
+          {{ note.updatedAt }}
         </div>
       </div>
     </div>
@@ -23,9 +27,9 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, reactive } from "vue";
-import dayjs from "dayjs";
 import ContextMenu from "@onaug6th/vue3-context-menu/dist/vue3-context-menu.es";
 import { NoteItem } from "./types";
+import dayjs from "dayjs";
 
 export default defineComponent({
   setup() {
@@ -38,14 +42,18 @@ export default defineComponent({
     /**
      * 获取便笺列表
      */
-    async function getAllNotes() {
-      state.notes = iHelper.db.findAndSort({}, { updatedAt: -1 })
+    function getAllNotes(): void {
+      const data = iHelper.db.findAndSort({}, { updatedAt: -1 });
+      state.notes = data.map((note) => {
+        note.updatedAt = dayjs(note.updatedAt).format("YYYY-MM-DD hh:mm:ss");
+        return note;
+      });
     }
 
     /**
      * 新增便笺
      */
-    function addNote() {
+    function addNote(): void {
       const res = iHelper.db.insert({
         content: "",
         className: "",
@@ -57,17 +65,17 @@ export default defineComponent({
 
     /**
      * 创建便笺窗体
-     * @param id
+     * @param _id
      */
-    function openNote(id: string) {
-      return iHelper.createBrowserWindow(`${location.href}note?id=${id}`).browserViewId;
+    function openNote(_id: string): number {
+      return iHelper.createBrowserWindow(`${location.href}note?_id=${_id}`);
     }
 
     /**
      * 打开便笺窗体
      */
-    function openNoteWin(note) {
-      const winId = openNote(note.id);
+    function openNoteWin(note): void {
+      const winId = openNote(note._id);
       note.winId = winId;
     }
 
@@ -75,7 +83,7 @@ export default defineComponent({
      * 从列表中移除便笺
      * @param noteIndex
      */
-    function delateNoteFormList(noteIndex: number) {
+    function delateNoteFormList(noteIndex: number): void {
       state.notes.splice(noteIndex, 1);
     }
 
@@ -84,12 +92,14 @@ export default defineComponent({
      * @param note
      * @param noteIndex
      */
-    function deleteNote(note: NoteItem, noteIndex: number) {
+    function deleteNote(note: NoteItem, noteIndex: number): void {
       //  通知主进程关闭便笺的窗口
       iHelper.send(note.winId, "notes-note-close");
+      //  列表中移除
       delateNoteFormList(noteIndex);
+      //  数据库中移除
       iHelper.db.remove({
-        id: note.id,
+        _id: note._id,
       });
     }
 
@@ -99,7 +109,11 @@ export default defineComponent({
      * @param note
      * @param noteIndex
      */
-    function contextMenu(event: MouseEvent, note: NoteItem, noteIndex: number) {
+    function contextMenu(
+      event: MouseEvent,
+      note: NoteItem,
+      noteIndex: number
+    ): void {
       ContextMenu({
         event,
         list: [
@@ -119,25 +133,31 @@ export default defineComponent({
       });
     }
 
-    function onIpcEvent() {
-      iHelper.on('notes-note-update', ({ id, content }) => {
-        state.notes.some(note => {
-          if (note.id === id) {
+    /**
+     * 监听事件
+     */
+    function onEvent() {
+      //  便笺内容更新
+      iHelper.on("notes-note-update", ({ _id, content }) => {
+        state.notes.some((note) => {
+          if (note._id === _id) {
             note.content = content;
             return true;
           }
         });
       });
 
-      iHelper.on('notes-note-delete', ({ id }) => {
-        const index = state.notes.findIndex(note => note.id === id);
+      //  便笺关闭时，内容为空，直接删除
+      iHelper.on("notes-note-delete", ({ _id }) => {
+        const index = state.notes.findIndex((note) => note._id === _id);
+        //  列表中移除
         delateNoteFormList(index);
       });
     }
 
     onBeforeMount(() => {
       getAllNotes();
-      onIpcEvent();
+      onEvent();
     });
 
     return {
@@ -145,7 +165,6 @@ export default defineComponent({
       addNote,
       openNote,
       openNoteWin,
-      dayjs,
       contextMenu,
     };
   },

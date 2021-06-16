@@ -2,7 +2,7 @@
   <div class="fuck">
     <div class="editor-wrap">
       <div
-        v-html="editorContent"
+        v-html="content"
         ref="editor"
         class="editor"
         contenteditable
@@ -11,6 +11,7 @@
         @input="contentChange"
       ></div>
     </div>
+
     <section class="tools">
       <template v-for="item in icons" :key="item.name">
         <button
@@ -36,8 +37,9 @@ export default defineComponent({
   },
   emits: ["change"],
   setup(props, { emit }) {
-    //  编辑器
+    //  编辑器索引
     const editor: Ref<HTMLDivElement | null> = ref(null);
+    //  图标
     const icons = [
       {
         name: "bold",
@@ -70,15 +72,17 @@ export default defineComponent({
         icon: "icon-ol",
       },
     ];
-    const editorContent: Ref<string | undefined> = ref("");
+    //  编辑器内容
+    const content: Ref<string | undefined> = ref("");
 
     watch(props, (props) => {
-      if (!editorContent.value) {
-        editorContent.value = props.content;
+      if (!content.value) {
+        content.value = props.content;
       }
     });
 
     onMounted(() => {
+      content.value = props.content;
       focus();
     });
 
@@ -124,11 +128,11 @@ export default defineComponent({
 
     return {
       editor,
-      editorIconHandle,
       icons,
+      content,
+      editorIconHandle,
       contentChange,
       paste,
-      editorContent,
     };
   },
 });

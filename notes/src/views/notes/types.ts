@@ -1,4 +1,4 @@
 export type NoteItem = {
-  id: string;
+  _id: string;
   winId: number;
 };
