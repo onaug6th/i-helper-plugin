@@ -10,9 +10,9 @@
       @blur="doneEdit"
     />
     <div v-else class="view">
-      <input :checked="todo.done" class="toggle" type="checkbox" @change="toggleTodo(todo)" />
-      <label v-text="todo.text" @click="editing = true" />
-      <button class="destroy" @click="deleteTodo(todo)" />
+      <input :checked="todo.done" class="toggle" type="checkbox" :title="todo.done ? '取消完成待办' : '完成待办'" @change="toggleTodo(todo)" />
+      <label v-text="todo.text" title="点击编辑" @click="editing = true" />
+      <button class="destroy" title="删除待办" @click="deleteTodo(todo)" />
     </div>
   </li>
 </template>

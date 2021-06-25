@@ -2,7 +2,7 @@
   <section class="todoapp">
     <!-- 头部 -->
     <header class="header">
-      <input class="new-todo" autocomplete="off" placeholder="添加新待办…" @keyup.enter="addTodo" />
+      <input class="new-todo" autocomplete="off" placeholder="添加新待办…" title="输入待办，回车添加" @keyup.enter="addTodo" />
     </header>
     <!-- 头部 -->
 
@@ -11,12 +11,12 @@
       <!-- 切换选择全部 -->
       <input
         id="toggle-all"
-        :checked="allChecked"
         class="toggle-all"
         type="checkbox"
+        :checked="allChecked"
         @change="toggleAll({ done: !allChecked })"
       />
-      <label for="toggle-all" />
+      <label for="toggle-all" :title="allChecked ? '取消完成所有待办' : '完成所有待办'" />
       <!-- 切换选择全部 -->
 
       <!-- 列表区域 -->
@@ -45,7 +45,7 @@
       <div class="footer-right">
         <ul class="filters">
           <li v-for="item in filterList" :key="item.key">
-            <a :class="{ selected: visibility === item.key }" @click.prevent="visibility = item.key">
+            <a :class="{ selected: visibility === item.key }" :title="`查看${item.label}的待办`"  @click.prevent="visibility = item.key">
               {{ item.label }}
             </a>
           </li>
@@ -94,7 +94,7 @@ export default {
     return {
       visibility: 'all',
       filterList,
-      todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY)) || [{ text: '学习', done: false }]
+      todos: JSON.parse(window.localStorage.getItem(STORAGE_KEY)) || [{ text: '看看这个世界', done: false }]
     };
   },
   computed: {
