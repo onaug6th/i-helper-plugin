@@ -23,7 +23,6 @@
       <ul class="todo-list">
         <todo
           v-for="(todo, index) in filteredTodos"
-          :key="index"
           :todo="todo"
           @toggle-todo="toggleTodo"
           @edit-todo="editTodo"
