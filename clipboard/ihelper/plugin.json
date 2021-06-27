@@ -1,0 +1,20 @@
+{
+  "name": "剪贴板",
+  "desc": "方便的从剪贴板中读取历史数据",
+  "main": "dist\\index.html",
+  "version": "0.0.1",
+  "logo": "logo.jpg",
+  "preload": "preload.js",
+  "dev": {
+    "main": "http://localhost:3000",
+    "preload": "preload.js"
+  },
+  "winOptions": {
+    "width": 580,
+    "height": 530,
+    "minWidth": 350
+  },
+  "permissions": {
+    "clipboard": true
+  }
+}
