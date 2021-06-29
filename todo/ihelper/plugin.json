@@ -1,4 +1,5 @@
 {
+  "id": "fc793821-517d-fa6e-a784-4372e1ef316e",
   "name": "待办",
   "desc": "记录每一件完成和即将要做的事情",
   "main": "dist\\index.html",

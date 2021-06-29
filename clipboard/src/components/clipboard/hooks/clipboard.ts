@@ -100,9 +100,9 @@ let observerItem: any;
  * 配置监听方法
  */
 function setClipboardObserver() {
-  observerItem = iHelper.clipboard.on = function (type: string, value: any) {
+  observerItem = iHelper.clipboard.on(function (type: string, value: any) {
     clipboardListAdd(value, type);
-  };
+  });
 }
 
 if (clipboardConfig.isObserver) {

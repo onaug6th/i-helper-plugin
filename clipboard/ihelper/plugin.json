@@ -1,8 +1,9 @@
 {
+  "id": "a326ac62-db9a-cd74-75b4-7fa2ec03fa7a",
   "name": "剪贴板",
   "desc": "方便的从剪贴板中读取历史数据",
   "main": "dist\\index.html",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "logo": "logo.jpg",
   "preload": "preload.js",
   "dev": {
