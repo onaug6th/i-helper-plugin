@@ -2,7 +2,7 @@
   <section class="todoapp">
     <!-- 头部 -->
     <header class="header">
-      <input class="new-todo" autocomplete="off" placeholder="添加新待办…" title="输入待办，回车添加" @keyup.enter="addTodo" />
+      <input class="new-todo" autocomplete="off" placeholder="添加新待办，回车添加" title="输入待办，回车添加" @keyup.enter="addTodo" />
     </header>
     <!-- 头部 -->
 

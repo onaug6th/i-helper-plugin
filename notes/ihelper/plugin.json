@@ -7,7 +7,7 @@
   "logo": "logo.gif",
   "preload": "preload.js",
   "dev": {
-    "main": "dist\\index.html",
+    "main": "http://localhost:9528",
     "preload": "preload.js"
   },
   "winOptions": {

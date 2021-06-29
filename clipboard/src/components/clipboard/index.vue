@@ -6,7 +6,6 @@
           v-model="clipboardConfig.isObserver"
           active-text="启用"
           :title="`点击${clipboardConfig.isObserver ? '关闭' : '启用'}剪贴板监听`"
-          @change="isObserverChange"
         ></el-switch>
 
         <el-checkbox-group v-model="state.type" size="mini">
@@ -35,7 +34,7 @@
       <!-- 行内容 -->
       <div class="list-row__value">
         <div v-if="row.type === 'text'" v-html="rowValue(row)"></div>
-        <img v-else-if="row.type === 'image'" :src="row.value" />
+        <img v-else-if="row.type === 'image'" title="图片可直接拖拽到桌面保存，或拖拽到其他应用使用" :src="row.value" />
       </div>
       <!-- 行内容 -->
       <!-- 行操作 -->
@@ -74,7 +73,6 @@ import {
   copy,
   del,
   rowValue,
-  isObserverChange,
   clipboardConfig,
   disabledCheckButton
 } from './hooks/clipboard';
@@ -95,7 +93,6 @@ export default defineComponent({
       copy,
       del,
       rowValue,
-      isObserverChange,
       disabledCheckButton
     };
   }

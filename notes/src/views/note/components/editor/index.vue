@@ -1,6 +1,6 @@
 <template>
-  <div class="fuck">
-    <div class="editor-wrap">
+  <div class="editor-wrap">
+    <div class="editor-content">
       <div
         v-html="content"
         ref="editor"

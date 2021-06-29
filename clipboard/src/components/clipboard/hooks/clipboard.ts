@@ -93,35 +93,16 @@ function rowValue(row: ClipboardItem): string {
   }
 }
 
-//  观察剪贴板变化
-let observerItem: any;
-
 /**
  * 配置监听方法
  */
 function setClipboardObserver() {
-  observerItem = iHelper.clipboard.on(function (type: string, value: any) {
+  iHelper.clipboard.on(function (type: string, value: any) {
     clipboardListAdd(value, type);
   });
 }
 
-if (clipboardConfig.isObserver) {
-  setClipboardObserver();
-}
-
-/**
- * 是否监听变化
- * @param value
- */
-function isObserverChange(value: boolean): void {
-  //  未曾实例化
-  if (!observerItem && value) {
-    setClipboardObserver();
-    return;
-  }
-  value ? observerItem.start() : observerItem.stop();
-  clipboardConfig.isObserver = value;
-}
+setClipboardObserver();
 
 //  从列表中复制出的内容
 let copyFromList: string;
@@ -149,6 +130,9 @@ function insertClipboardList(clipboardItem: ClipboardItem) {
  * @param type
  */
 async function clipboardListAdd(value: any, type: string) {
+  if(!clipboardConfig.isObserver) {
+    return;
+  }
   //  当前进入函数的剪贴板内容
   const currentValue = value;
 
@@ -250,7 +234,6 @@ export {
   del,
   rowValue,
   toggleStar,
-  isObserverChange,
   clipboardConfig,
   disabledCheckButton,
 };
