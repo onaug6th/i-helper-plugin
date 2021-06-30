@@ -3,7 +3,7 @@
   "name": "便笺",
   "desc": "随时随地记录内容",
   "main": "dist\\index.html",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "logo": "logo.gif",
   "preload": "preload.js",
   "dev": {

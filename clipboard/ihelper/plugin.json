@@ -3,7 +3,7 @@
   "name": "剪贴板",
   "desc": "方便的从剪贴板中读取历史数据",
   "main": "dist\\index.html",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "logo": "logo.jpg",
   "preload": "preload.js",
   "dev": {

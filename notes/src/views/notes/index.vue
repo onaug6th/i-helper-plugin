@@ -45,7 +45,7 @@ export default defineComponent({
      * 获取便笺列表
      */
     function getAllNotes(): void {
-      const data = iHelper.db.findAndSort({}, { updatedAt: -1 });
+      const data = iHelper.db.find({}, { updatedAt: -1 });
       state.notes = data;
     }
 
