@@ -111,7 +111,7 @@ let copyFromList: string;
  * 获取剪贴板记录列表
  */
 function getAllClipboardList(): void {
-  const data = iHelper.db.find({}, { updatedAt: -1 });
+  const data = iHelper.db.find();
   state.clipboardList = data;
 }
 

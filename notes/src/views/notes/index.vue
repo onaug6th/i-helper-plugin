@@ -28,8 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, reactive } from "vue";
-import ContextMenu from "@onaug6th/vue3-context-menu/dist/vue3-context-menu.es";
+import { defineComponent, onBeforeMount, reactive, getCurrentInstance } from "vue";
 import { NoteItem } from "./types";
 import dayjs from "dayjs";
 
@@ -41,11 +40,13 @@ export default defineComponent({
       notes: [],
     });
 
+    const { proxy }:any = getCurrentInstance();
+
     /**
      * 获取便笺列表
      */
     function getAllNotes(): void {
-      const data = iHelper.db.find({}, { updatedAt: -1 });
+      const data = iHelper.db.find();
       state.notes = data;
     }
 
@@ -113,7 +114,7 @@ export default defineComponent({
       note: NoteItem,
       noteIndex: number
     ): void {
-      ContextMenu({
+      proxy.$contextMenu({
         event,
         list: [
           {
