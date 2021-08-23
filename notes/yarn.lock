@@ -21,10 +21,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@onaug6th/vue3-context-menu@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@onaug6th/vue3-context-menu/-/vue3-context-menu-0.0.2.tgz#8478af8948e0b246ecfe3c16ab94431993ba7420"
-  integrity sha512-slOZmkpNXoIurc9d1SGAOk1vX1lZgWKN7gWMpoB5OzGVtuJqV+myJfefp1UxqzygRMGHyAM8JWkbmiPJWUrTXg==
+"@onaug6th/vue3-context-menu@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@onaug6th/vue3-context-menu/-/vue3-context-menu-0.0.4.tgz#d94c8c18e561a284f918e9102ec42f4264ce7560"
+  integrity sha512-YDuM6dsiC0UM0PZ6AjPTR8c1StAC1GVIJQAvoZX2G9omqy/ULOQRyvirE+lqwyJP9CyhvfhrV8D7LgYn4LozYA==
   dependencies:
     "@types/node" "^15.0.1"
     vue "^3.0.5"

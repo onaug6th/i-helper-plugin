@@ -7,7 +7,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@onaug6th/vue3-context-menu": "^0.0.2",
+    "@onaug6th/vue3-context-menu": "^0.0.4",
     "dayjs": "^1.10.4",
     "vue": "^3.0.5",
     "vue-router": "^4.0.0-0",

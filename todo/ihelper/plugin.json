@@ -3,7 +3,7 @@
   "name": "待办",
   "desc": "记录每一件完成和即将要做的事情",
   "main": "dist\\index.html",
-  "version": "0.0.2",
+  "version": "0.0.8",
   "logo": "logo.png",
   "preload": "preload.js",
   "dev": {
@@ -14,5 +14,9 @@
     "width": 350,
     "height": 450,
     "minWidth": 350
+  },
+  "header": {
+    "title": false,
+    "btns": ["pin", "close"]
   }
 }
