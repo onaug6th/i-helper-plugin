@@ -1,9 +1,5 @@
 <template>
   <div class="notes">
-    <div class="notes-header">
-      <button @click="addNote"
-              title="新增便笺">新增</button>
-    </div>
     <div v-for="(note, noteIndex) in state.notes"
          class="note-item"
          shadow="hover"
@@ -68,7 +64,11 @@ export default defineComponent({
      * @param _id
      */
     function openNote(_id: string): number {
-      return iHelper.createBrowserWindow(`${location.href}note?_id=${_id}`);
+      return iHelper.createBrowserWindow(`${location.href}note?_id=${_id}`, {
+        "header": {
+          "btns": ["pin", "resize","close"]
+        }
+      });
     }
 
     /**
@@ -147,6 +147,10 @@ export default defineComponent({
      * 监听事件
      */
     function onEvent() {
+      iHelper.on("btn-add", () => {
+        addNote();
+      });
+
       //  便笺内容更新
       iHelper.on("notes-note-update", ({ _id, content }) => {
         state.notes.some((note) => {
