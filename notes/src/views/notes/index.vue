@@ -1,10 +1,13 @@
 <template>
+  <Header addTitle="新增便笺"
+          :btns="['add', 'pin', 'resize', 'close']"
+          @add="addNote" />
   <div class="notes">
     <div v-for="(note, noteIndex) in state.notes"
          class="note-item"
          shadow="hover"
          :key="noteIndex"
-         title="查看便笺"
+         title="note"
          @click="openNoteWin(note)"
          @contextmenu.prevent="contextMenu($event, note, noteIndex)">
       <div>
@@ -24,11 +27,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, reactive, getCurrentInstance } from "vue";
+import {
+  defineComponent,
+  onBeforeMount,
+  reactive,
+  getCurrentInstance,
+} from "vue";
 import { NoteItem } from "./types";
 import dayjs from "dayjs";
+import Header from "../../components/header/index.vue";
 
 export default defineComponent({
+  components: {
+    Header,
+  },
   setup() {
     const state: {
       notes: Array<any>;
@@ -36,7 +48,7 @@ export default defineComponent({
       notes: [],
     });
 
-    const { proxy }:any = getCurrentInstance();
+    const { proxy }: any = getCurrentInstance();
 
     /**
      * 获取便笺列表
@@ -44,6 +56,7 @@ export default defineComponent({
     function getAllNotes(): void {
       const data = iHelper.db.find();
       state.notes = data;
+      console.info(data);
     }
 
     /**
@@ -65,9 +78,9 @@ export default defineComponent({
      */
     function openNote(_id: string): number {
       return iHelper.createBrowserWindow(`${location.href}note?_id=${_id}`, {
-        "header": {
-          "btns": ["pin", "resize","close"]
-        }
+        header: {
+          btns: ["pin", "resize", "close"],
+        },
       });
     }
 
@@ -147,10 +160,6 @@ export default defineComponent({
      * 监听事件
      */
     function onEvent() {
-      iHelper.on("btn-add", () => {
-        addNote();
-      });
-
       //  便笺内容更新
       iHelper.on("notes-note-update", ({ _id, content }) => {
         state.notes.some((note) => {

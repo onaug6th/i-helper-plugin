@@ -1,14 +1,18 @@
 <template>
-  <Editor :content="editContent" @change="changeEditContent" />
+  <Header />
+  <Editor :content="editContent"
+          @change="changeEditContent" />
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref } from "vue";
 import Editor from "./components/editor/index.vue";
 import { useRoute } from "vue-router";
+import Header from "../../components/header/index.vue";
 
 export default defineComponent({
   components: {
+    Header,
     Editor,
   },
   setup() {
@@ -20,7 +24,7 @@ export default defineComponent({
     onBeforeMount(() => {
       initEditorContent();
 
-      iHelper.on('notes-note-delete', () => {
+      iHelper.on("notes-note-delete", () => {
         //  关闭此便笺
         iHelper.close();
       });
@@ -86,7 +90,7 @@ export default defineComponent({
 
         //  通知主面板删除此条便笺
         iHelper.send(fatherViewId, "notes-note-delete", {
-          _id
+          _id,
         });
       }
     }

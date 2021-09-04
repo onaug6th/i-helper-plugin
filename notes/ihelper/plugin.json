@@ -16,7 +16,6 @@
     "minWidth": 250
   },
   "header": {
-    "title": false,
-    "btns": ["add", "pin", "close"]
+    "show": false
   }
 }
