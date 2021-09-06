@@ -57,7 +57,7 @@ export default defineComponent({
      * @param content 内容
      */
     function changeEditContent(content: string) {
-      editContent.value = content;
+      
       if (!_id) {
         return false;
       }

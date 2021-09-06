@@ -77,11 +77,7 @@ export default defineComponent({
      * @param _id
      */
     function openNote(_id: string): number {
-      return iHelper.createBrowserWindow(`${location.href}note?_id=${_id}`, {
-        header: {
-          btns: ["pin", "resize", "close"],
-        },
-      });
+      return iHelper.createBrowserWindow(`${location.href}note?_id=${_id}`);
     }
 
     /**
