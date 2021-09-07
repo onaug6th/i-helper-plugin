@@ -1,5 +1,5 @@
 <template>
-  <Header />
+  <Header :beforeClose="close" />
   <Editor :content="editContent"
           @change="changeEditContent" />
 </template>
@@ -24,7 +24,7 @@ export default defineComponent({
     onBeforeMount(() => {
       initEditorContent();
 
-      iHelper.on("notes-note-delete", () => {
+      iHelper.on("note-delete", () => {
         //  关闭此便笺
         iHelper.close();
       });
@@ -57,7 +57,7 @@ export default defineComponent({
      * @param content 内容
      */
     function changeEditContent(content: string) {
-      
+      editContent.value = content;
       if (!_id) {
         return false;
       }

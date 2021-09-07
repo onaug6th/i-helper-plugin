@@ -1,13 +1,13 @@
 <template>
   <Header addTitle="新增便笺"
-          :btns="['add', 'pin', 'resize', 'close']"
+          :btns="['add', 'pin', 'close']"
           @add="addNote" />
   <div class="notes">
     <div v-for="(note, noteIndex) in state.notes"
          class="note-item"
          shadow="hover"
+         title="打开便笺"
          :key="noteIndex"
-         title="note"
          @click="openNoteWin(note)"
          @contextmenu.prevent="contextMenu($event, note, noteIndex)">
       <div>
@@ -15,7 +15,7 @@
              class="note-item__content">
         </div>
         <div class="note-item__date">
-          {{ formatDate(note.updatedAt) }}
+          {{ note.updatedAt }}
         </div>
       </div>
     </div>
@@ -55,7 +55,11 @@ export default defineComponent({
      */
     function getAllNotes(): void {
       const data = iHelper.db.find();
-      state.notes = data;
+      state.notes = data.map(note => {
+        note.createdAt = formatDate(note.createdAt);
+        note.updatedAt = formatDate(note.updatedAt);
+        return note;
+      });
       console.info(data);
     }
 
@@ -69,6 +73,8 @@ export default defineComponent({
       });
       const winId = openNote(res._id);
       res.winId = winId;
+      res.createdAt = formatDate(res.createdAt);
+      res.updatedAt = formatDate(res.updatedAt);
       state.notes.unshift(res);
     }
 
@@ -103,7 +109,7 @@ export default defineComponent({
      */
     function deleteNote(note: NoteItem, noteIndex: number): void {
       //  关闭被删除便笺的窗口
-      iHelper.send(note.winId, "notes-note-delete");
+      iHelper.send(note.winId, "note-delete");
       //  列表中移除
       delateNoteFormList(noteIndex);
       //  数据库中移除
@@ -146,7 +152,7 @@ export default defineComponent({
      * 日期格式化
      * @param date
      */
-    function formatDate(date) {
+    function formatDate(date: string) {
       const dayObj = dayjs(date);
       const isCurrentYear = dayObj.isSame(new Date().getFullYear(), "year");
       return dayObj.format(`${isCurrentYear ? "YYYY年" : ""}M月D日`);
@@ -184,8 +190,7 @@ export default defineComponent({
       addNote,
       openNote,
       openNoteWin,
-      contextMenu,
-      formatDate,
+      contextMenu
     };
   },
 });

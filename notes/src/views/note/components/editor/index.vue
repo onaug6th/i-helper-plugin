@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, Ref, watch } from "vue";
+import { defineComponent, onMounted, ref, Ref } from "vue";
 import * as utils from "../../../../utils";
 
 export default defineComponent({
@@ -75,12 +75,6 @@ export default defineComponent({
     //  编辑器内容
     const content: Ref<string | undefined> = ref("");
 
-    watch(props, (props) => {
-      if (!content.value) {
-        content.value = props.content;
-      }
-    });
-
     onMounted(() => {
       content.value = props.content;
       focus();
@@ -115,7 +109,7 @@ export default defineComponent({
     const contentChange = utils.debounce((e: InputEvent) => {
       const editorHtml = (e.target as Element).innerHTML;
       emit("change", editorHtml);
-    }, 1000);
+    }, 300);
 
     /**
      * 粘贴回调
