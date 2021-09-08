@@ -3,6 +3,9 @@
           :btns="['add', 'pin', 'close']"
           @add="addNote" />
   <div class="notes">
+    <div class="notes-top">
+      便笺
+    </div>
     <div v-for="(note, noteIndex) in state.notes"
          class="note-item"
          shadow="hover"
@@ -198,4 +201,13 @@ export default defineComponent({
 
 <style lang="less" scoped>
 @import "./index.less";
+</style>
+<style lang="less">
+.note-item__content {
+  img {
+    max-width: 100%;
+    max-height: 100px;
+    object-fit: cover;
+  }
+}
 </style>

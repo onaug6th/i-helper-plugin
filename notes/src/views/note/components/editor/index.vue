@@ -1,25 +1,24 @@
 <template>
   <div class="editor-wrap">
     <div class="editor-content">
-      <div
-        v-html="content"
-        ref="editor"
-        class="editor"
-        contenteditable
-        :class="className"
-        @paste.prevent="paste"
-        @input="contentChange"
-      ></div>
+      <div v-html="content"
+           ref="editor"
+           class="editor"
+           contenteditable
+           :class="className"
+           @paste.prevent="paste"
+           @input="contentChange"
+           @contextmenu.prevent="contextMenu($event)"></div>
     </div>
 
     <section class="tools">
-      <template v-for="item in icons" :key="item.name">
-        <button
-          class="icon"
-          :title="item.title"
-          @click="editorIconHandle($event, item.name)"
-        >
-          <i class="iconfont" :class="item.icon"></i>
+      <template v-for="item in icons"
+                :key="item.name">
+        <button class="icon"
+                :title="item.title"
+                @click="editorIconHandle($event, item.name)">
+          <i class="iconfont"
+             :class="item.icon"></i>
         </button>
       </template>
     </section>
@@ -27,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, Ref } from "vue";
+import { defineComponent, onMounted, ref, Ref, getCurrentInstance } from "vue";
 import * as utils from "../../../../utils";
 
 export default defineComponent({
@@ -37,6 +36,7 @@ export default defineComponent({
   },
   emits: ["change"],
   setup(props, { emit }) {
+    const { proxy }: any = getCurrentInstance();
     //  编辑器索引
     const editor: Ref<HTMLDivElement | null> = ref(null);
     //  图标
@@ -117,7 +117,46 @@ export default defineComponent({
      */
     function paste(e: ClipboardEvent) {
       const pasteText = e.clipboardData?.getData("text/plain");
-      document.execCommand("insertText", false, pasteText);
+      const files = e.clipboardData?.files;
+
+      if (files && files.length) {
+        [].forEach.call(files, (file) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = function () {
+            document.execCommand(
+              "insertHTML",
+              false,
+              `<img src="${this.result}" />`
+            );
+          };
+        });
+      } else {
+        document.execCommand("insertText", false, pasteText);
+      }
+    }
+
+    /**
+     * 右键菜单
+     * @param e
+     */
+    function contextMenu (event) {
+      const nodeName = event.target.nodeName;
+      const value = event.target.src;
+
+      if(nodeName === "IMG") {
+        proxy.$contextMenu({
+        event,
+        list: [
+          {
+            text: "复制图片",
+            handler() {
+              iHelper.clipboard.writeImage(value);
+            },
+          },
+        ],
+      });
+      }
     }
 
     return {
@@ -127,6 +166,7 @@ export default defineComponent({
       editorIconHandle,
       contentChange,
       paste,
+      contextMenu
     };
   },
 });
