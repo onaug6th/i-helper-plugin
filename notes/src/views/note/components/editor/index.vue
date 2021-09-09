@@ -140,22 +140,24 @@ export default defineComponent({
      * 右键菜单
      * @param e
      */
-    function contextMenu (event) {
-      const nodeName = event.target.nodeName;
-      const value = event.target.src;
+    function contextMenu(event: MouseEvent) {
+      const target = event.target as HTMLElement;
+      const nodeName = target.nodeName;
 
-      if(nodeName === "IMG") {
+      if (nodeName === "IMG") {
+        const value = (target as HTMLImageElement).src;
+
         proxy.$contextMenu({
-        event,
-        list: [
-          {
-            text: "复制图片",
-            handler() {
-              iHelper.clipboard.writeImage(value);
+          event,
+          list: [
+            {
+              text: "复制图片",
+              handler() {
+                iHelper.clipboard.writeImage(value);
+              },
             },
-          },
-        ],
-      });
+          ],
+        });
       }
     }
 
@@ -166,7 +168,7 @@ export default defineComponent({
       editorIconHandle,
       contentChange,
       paste,
-      contextMenu
+      contextMenu,
     };
   },
 });
