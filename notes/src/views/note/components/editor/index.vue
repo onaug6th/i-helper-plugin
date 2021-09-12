@@ -1,17 +1,17 @@
 <template>
   <div class="editor-wrap">
-    <div class="editor-content">
+    <div class="editor-content" :style="editorStyle">
       <div v-html="content"
            ref="editor"
            class="editor"
            contenteditable
-           :class="className"
+           spellcheck="false"
            @paste.prevent="paste"
            @input="contentChange"
            @contextmenu.prevent="contextMenu($event)"></div>
     </div>
 
-    <section class="tools">
+    <section class="tools" :style="editorStyle">
       <template v-for="item in icons"
                 :key="item.name">
         <button class="icon"
@@ -26,13 +26,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, Ref, getCurrentInstance } from "vue";
+import { defineComponent, onMounted, ref, Ref, getCurrentInstance, computed } from "vue";
 import * as utils from "../../../../utils";
 
 export default defineComponent({
   props: {
     content: String,
-    className: String,
+    backgroundColor: String
   },
   emits: ["change"],
   setup(props, { emit }) {
@@ -74,6 +74,12 @@ export default defineComponent({
     ];
     //  编辑器内容
     const content: Ref<string | undefined> = ref("");
+
+    const editorStyle = computed(() => {
+      return {
+        backgroundColor: props.backgroundColor
+      }
+    })
 
     onMounted(() => {
       content.value = props.content;
@@ -165,6 +171,8 @@ export default defineComponent({
       editor,
       icons,
       content,
+      editorStyle,
+
       editorIconHandle,
       contentChange,
       paste,

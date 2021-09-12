@@ -11,6 +11,9 @@
          shadow="hover"
          title="打开便笺"
          :key="noteIndex"
+         :style="{
+           backgroundColor: note.color
+         }"
          @click="openNoteWin(note)"
          @contextmenu.prevent="contextMenu($event, note, noteIndex)">
       <div>
@@ -18,7 +21,7 @@
              class="note-item__content">
         </div>
         <div class="note-item__date">
-          {{ note.updatedAt }}
+          {{ formatDate(note.updatedAt) }}
         </div>
       </div>
     </div>
@@ -58,11 +61,7 @@ export default defineComponent({
      */
     function getAllNotes(): void {
       const data = iHelper.db.find();
-      state.notes = data.map(note => {
-        note.createdAt = formatDate(note.createdAt);
-        note.updatedAt = formatDate(note.updatedAt);
-        return note;
-      });
+      state.notes = data;
       console.info(data);
     }
 
@@ -71,13 +70,10 @@ export default defineComponent({
      */
     function addNote(): void {
       const res = iHelper.db.insert({
-        content: "",
-        className: "",
+        content: ""
       });
       const winId = openNote(res._id);
       res.winId = winId;
-      res.createdAt = formatDate(res.createdAt);
-      res.updatedAt = formatDate(res.updatedAt);
       state.notes.unshift(res);
     }
 
@@ -166,10 +162,10 @@ export default defineComponent({
      */
     function onEvent() {
       //  便笺内容更新
-      iHelper.on("notes-note-update", ({ _id, content }) => {
+      iHelper.on("notes-note-update", ({ _id, ...otherAttr }) => {
         state.notes.some((note) => {
           if (note._id === _id) {
-            note.content = content;
+            Object.assign(note, otherAttr);
             return true;
           }
         });
@@ -190,6 +186,9 @@ export default defineComponent({
 
     return {
       state,
+
+      formatDate,
+
       addNote,
       openNote,
       openNoteWin,

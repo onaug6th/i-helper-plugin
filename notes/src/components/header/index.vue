@@ -1,13 +1,18 @@
 <template>
-  <header class="header">
+  <header class="header" :style="{ backgroundColor }">
     <div class="header-left">
-      <div v-if="title" class="header-left__title">
-        <span>{{ title }}</span>
-      </div>
+    <div v-if="title" class="header-left__title">
+      <span>{{ title }}</span>
+    </div>
 
-      <button v-else-if="hasBtn('add')" class="icon" @click="add">
-        <i class="iconfont icon-add-select" :title="addTitle"></i>
-      </button>
+    <button v-if="hasBtn('add')" class="icon" @click="add">
+      <i class="iconfont icon-add-select" :title="addTitle"></i>
+    </button>
+
+    <button v-if="hasBtn('more')" class="icon" @click="more">
+      <i class="iconfont icon-more" :title="moreTitle"></i>
+    </button>
+
     </div>
     <div class="header-center"></div>
     <div class="header-right">
@@ -52,9 +57,17 @@ export default defineComponent({
     beforeClose: Function,
     isDev: Boolean,
     btns: Array,
-    addTitle: String
+    backgroundColor: String,
+    addTitle: {
+      type: String,
+      default: "新增"
+    },
+    moreTitle: {
+      type: String,
+      default: "更多"
+    }
   },
-  emits: ['add', 'close'],
+  emits: ['add', 'more', 'close'],
   setup(props, { emit }) {
 
     const state = reactive({
@@ -81,6 +94,13 @@ export default defineComponent({
      */
     function add() {
       emit('add');
+    }
+
+    /**
+     * 点击更多按钮
+     */
+    function more () {
+      emit('more');
     }
 
     /**
@@ -137,6 +157,7 @@ export default defineComponent({
       hasBtn,
 
       add,
+      more,
 
       toggleDevTools,
 
@@ -153,4 +174,47 @@ export default defineComponent({
 
 <style lang="less" scoped>
 @import './index.less';
+</style>
+<style lang="less">
+@import './font/iconfont.css';
+
+@iconSize: 40px;
+
+.icon {
+  width: @iconSize;
+  height: @iconSize;
+  min-width: @iconSize;
+  min-height: @iconSize;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+  a {
+    color: initial;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    position: relative;
+    z-index: 1;
+  }
+  .iconfont {
+    width: 22px;
+    position: relative;
+  }
+  &:hover {
+    &::before {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}
 </style>

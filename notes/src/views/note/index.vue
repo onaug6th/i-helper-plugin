@@ -1,11 +1,35 @@
 <template>
-  <Header :beforeClose="close" />
+  <Header :beforeClose="beforeClose" :btns="['add', 'more', 'pin', 'close']"
+          :backgroundColor="state.noteInfo.color"
+          @add="addNote"
+          @more="state.showMore = true" />
+
+  <div class="more-container" :class="{ 'more-show': state.showMore }">
+    <div class="more-shade" @click="state.showMore = false"></div>
+    <div class="more-content">
+      <ul class="colors">
+        <li v-for="color in state.colors"
+            :key="color"
+            :style="{
+              backgroundColor: color
+            }"
+            @click="changeColor(color)"></li>
+      </ul>
+
+      <p class="list" @click="openList">
+        <i class="iconfont icon-list"></i>
+        <span>笔记列表</span>
+      </p>
+    </div>
+  </div>
+
   <Editor :content="editContent"
+          :backgroundColor="state.noteInfo.color"
           @change="changeEditContent" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref } from "vue";
+import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import Editor from "./components/editor/index.vue";
 import { useRoute } from "vue-router";
 import Header from "../../components/header/index.vue";
@@ -16,13 +40,31 @@ export default defineComponent({
     Editor,
   },
   setup() {
-    const editContent = ref("");
     const route = useRoute();
+    const originUrl = location.origin;
+
+    const editContent = ref("");
     const _id = route.query._id as string;
-    const { fatherViewId } = iHelper.getWinInfo();
+    const state: any = reactive({
+      //  是否展示更多
+      showMore: false,
+      //  可修改的颜色列表
+      colors: [
+        "#ffe66e",
+        "#a1ef9b",
+        "#ffafdf",
+        "#d7afff",
+        "#9edfff",
+        "#e0e0e0",
+        "#767676"
+      ],
+      //  便笺信息
+      noteInfo: {}
+    });
 
     onBeforeMount(() => {
-      initEditorContent();
+      //  获取便笺信息
+      getNoteInfo();
 
       iHelper.on("note-delete", () => {
         //  关闭此便笺
@@ -31,24 +73,20 @@ export default defineComponent({
     });
 
     /**
-     * 初始化编辑器内容
+     * 获取列表视图id
      */
-    function initEditorContent() {
-      if (_id) {
-        getNoteItem(_id);
-      } else {
-        alert("不存在此便笺");
-      }
+    function getListViewId() {
+      return iHelper.getPluginWinsInfo().filter(({ viewUrl }) => viewUrl === originUrl)[0]?.viewId;
     }
 
     /**
      * 获取当前便笺内容
-     * @param _id
      */
-    function getNoteItem(_id: string) {
-      const info = iHelper.db.findOne({ _id });
-      if (info) {
-        editContent.value = info.content;
+    function getNoteInfo() {
+      const noteInfo = iHelper.db.findOne({ _id });
+      if (noteInfo) {
+        editContent.value = noteInfo.content;
+        state.noteInfo = noteInfo;
       }
     }
 
@@ -58,30 +96,73 @@ export default defineComponent({
      */
     function changeEditContent(content: string) {
       editContent.value = content;
-      if (!_id) {
-        return false;
-      }
+
+      updateNote({
+        content
+      });
+    }
+
+    /**
+     * 更新便笺
+     * @param updateValue 更新内容
+     */
+    function updateNote(updateValue) {
       iHelper.db.update(
         {
           _id,
         },
         {
-          _id,
-          content,
+          ...state.noteInfo,
+          ...updateValue
         }
       );
 
+      getNoteInfo();
+
       //  通知主面板更新便笺内容
-      iHelper.send(fatherViewId, "notes-note-update", {
+      iHelper.send(getListViewId(), "notes-note-update", {
         _id,
-        content,
+        ...state.noteInfo
       });
+    }
+
+    /**
+     * 切换便笺背景颜色
+     */
+    function changeColor(color: string) {
+      if(color === state.noteInfo.color) {
+        color = "";
+      }
+
+      state.noteInfo.color = color;
+      state.showMore = false;
+      updateNote({
+        color
+      });
+    }
+
+    /**
+     * 新增便笺
+     */
+    function addNote() {
+      const res = iHelper.db.insert({
+        content: ""
+      });
+      iHelper.createBrowserWindow(`${location.href}note?_id=${res._id}`);
+    }
+
+    /**
+     * 打开便笺列表
+     */
+    function openList() {
+      iHelper.createBrowserWindow(`${location.origin}`);
+      state.showMore = false;
     }
 
     /**
      * 关闭便笺
      */
-    async function close() {
+    async function beforeClose() {
       if (!editContent.value) {
         //  如果内容为空就直接从数据库删除
         iHelper.db.remove({
@@ -89,19 +170,27 @@ export default defineComponent({
         });
 
         //  通知主面板删除此条便笺
-        iHelper.send(fatherViewId, "notes-note-delete", {
+        iHelper.send(getListViewId(), "notes-note-delete", {
           _id,
         });
       }
     }
 
     return {
+      state,
       editContent,
+
+      addNote,
+      changeColor,
+      openList,
+
       changeEditContent,
-      close,
+      beforeClose
     };
   },
 });
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+@import "./index.less";
+</style>
