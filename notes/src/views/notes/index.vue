@@ -109,8 +109,13 @@ export default defineComponent({
      * @param noteIndex
      */
     function deleteNote(note: NoteItem, noteIndex: number): void {
-      //  关闭被删除便笺的窗口
-      iHelper.send(note.winId, "note-delete");
+      const viewId = iHelper.getPluginWinsInfo().filter(({ viewUrl }) => viewUrl.includes(note._id))[0]?.viewId;
+
+      if(viewId) {
+        //  关闭被删除便笺的窗口
+        iHelper.send(viewId, "note-delete");
+      }
+
       //  列表中移除
       delateNoteFormList(noteIndex);
       //  数据库中移除

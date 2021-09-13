@@ -74,8 +74,15 @@ export default defineComponent({
     /**
      * 获取列表视图id
      */
-    function getListViewId() {
-      return iHelper.getPluginWinsInfo().filter(({ viewUrl }) => viewUrl.includes('notes'))[0]?.viewId;
+    function getListViewInfo() {
+      const listWinInfo = iHelper.getPluginWinsInfo().filter(({ viewUrl }) => {
+        //  @todo: 这个判断在开发和生产的时候有问题
+        const urlArr = viewUrl.split("\\");
+        
+        return !urlArr[urlArr.length - 1].includes('note') 
+      })[0];
+
+      return listWinInfo ? listWinInfo : {}
     }
 
     /**
@@ -119,7 +126,7 @@ export default defineComponent({
       getNoteInfo();
 
       //  通知主面板更新便笺内容
-      iHelper.send(getListViewId(), "notes-note-update", {
+      iHelper.send(getListViewInfo().viewId, "notes-note-update", {
         _id,
         ...state.noteInfo
       });
@@ -156,7 +163,7 @@ export default defineComponent({
      * 打开便笺列表
      */
     function openList() {
-      iHelper.createBrowserWindow(`${basePath}#/notes`);
+      iHelper.createBrowserWindow(getListViewInfo().viewUrl || basePath);
       state.showMore = false;
     }
 
@@ -171,7 +178,7 @@ export default defineComponent({
         });
 
         //  通知主面板删除此条便笺
-        iHelper.send(getListViewId(), "notes-note-delete", {
+        iHelper.send(getListViewInfo().viewId, "notes-note-delete", {
           _id,
         });
       }
