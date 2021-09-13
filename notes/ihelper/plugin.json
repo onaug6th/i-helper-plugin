@@ -2,8 +2,8 @@
   "id": "6dd4b130-722f-a07a-8e6e-fcf0e9044076",
   "name": "便笺",
   "desc": "随时随地记录内容",
-  "main": "dist\\index.html",
-  "version": "0.0.15",
+  "main": "dist/index.html",
+  "version": "0.0.16",
   "logo": "logo.gif",
   "preload": "preload.js",
   "dev": {

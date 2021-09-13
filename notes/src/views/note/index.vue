@@ -41,7 +41,6 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    const originUrl = location.origin;
 
     const editContent = ref("");
     const _id = route.query._id as string;
@@ -76,7 +75,7 @@ export default defineComponent({
      * 获取列表视图id
      */
     function getListViewId() {
-      return iHelper.getPluginWinsInfo().filter(({ viewUrl }) => viewUrl === originUrl)[0]?.viewId;
+      return iHelper.getPluginWinsInfo().filter(({ viewUrl }) => viewUrl.includes('notes'))[0]?.viewId;
     }
 
     /**
@@ -141,6 +140,8 @@ export default defineComponent({
       });
     }
 
+    const basePath = location.href.split("#/")[0];
+
     /**
      * 新增便笺
      */
@@ -148,14 +149,14 @@ export default defineComponent({
       const res = iHelper.db.insert({
         content: ""
       });
-      iHelper.createBrowserWindow(`${location.href}note?_id=${res._id}`);
+      iHelper.createBrowserWindow(`${basePath}#/note?_id=${res._id}`);
     }
 
     /**
      * 打开便笺列表
      */
     function openList() {
-      iHelper.createBrowserWindow(`${location.origin}`);
+      iHelper.createBrowserWindow(`${basePath}#/notes`);
       state.showMore = false;
     }
 

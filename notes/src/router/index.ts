@@ -2,9 +2,12 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: Array<RouteRecordRaw> = [
-
   {
     path: '/',
+    redirect: '/notes'
+  },
+  {
+    path: '/notes',
     component: () => import('../views/notes/index.vue')
   },
   {

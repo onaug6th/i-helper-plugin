@@ -82,7 +82,9 @@ export default defineComponent({
      * @param _id
      */
     function openNote(_id: string): number {
-      return iHelper.createBrowserWindow(`${location.href}note?_id=${_id}`);
+      const basePath = location.href.split("#/")[0];
+
+      return iHelper.createBrowserWindow(`${basePath}#/note?_id=${_id}`);
     }
 
     /**
@@ -163,19 +165,12 @@ export default defineComponent({
     function onEvent() {
       //  便笺内容更新
       iHelper.on("notes-note-update", ({ _id, ...otherAttr }) => {
-        state.notes.some((note) => {
-          if (note._id === _id) {
-            Object.assign(note, otherAttr);
-            return true;
-          }
-        });
+        getAllNotes();
       });
 
       //  便笺关闭时，内容为空，直接删除
-      iHelper.on("notes-note-delete", ({ _id }) => {
-        const index = state.notes.findIndex((note) => note._id === _id);
-        //  列表中移除
-        delateNoteFormList(index);
+      iHelper.on("notes-note-delete", () => {
+        getAllNotes();
       });
     }
 
