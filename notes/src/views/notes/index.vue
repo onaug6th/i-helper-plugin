@@ -82,6 +82,17 @@ export default defineComponent({
      * @param _id
      */
     function openNote(_id: string): number {
+      /**
+       * location.href
+       * prod:
+       * "file:///C:/Users/IT-user/Desktop/project/ihelper-plugin/notes/ihelper/dist/index.html#/notes"
+       * "file:///C:/Users/IT-user/Desktop/project/ihelper-plugin/notes/ihelper/dist/index.html#/note?_id=Sltx90yRVEvVMSNC"
+       *
+       *
+       * dev:
+       * "http://localhost:9528/#/notes"
+       * "http://localhost:9528/#/note?_id=Sltx90yRVEvVMSNC"
+       */
       const basePath = location.href.split("#/")[0];
 
       return iHelper.createBrowserWindow(`${basePath}#/note?_id=${_id}`);

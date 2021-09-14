@@ -76,10 +76,17 @@ export default defineComponent({
      */
     function getListViewInfo() {
       const listWinInfo = iHelper.getPluginWinsInfo().filter(({ viewUrl }) => {
-        //  @todo: 这个判断在开发和生产的时候有问题
-        const urlArr = viewUrl.split("\\");
-        
-        return !urlArr[urlArr.length - 1].includes('note') 
+        const urlArr = viewUrl.split("#/");
+
+        //  分割不出，说明是 index.html
+        if(urlArr.length === 1) {
+          return true;
+        }
+        //  可分割，需要判断路由地址是不是主列表
+        else {
+          return !urlArr[urlArr.length - 1].includes('note?')
+        }
+
       })[0];
 
       return listWinInfo ? listWinInfo : {}
