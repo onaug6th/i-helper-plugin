@@ -6,6 +6,13 @@
   "description": "i-helper notes",
   "glyphs": [
     {
+      "icon_id": "19296364",
+      "name": "19背景颜色",
+      "font_class": "19beijingyanse",
+      "unicode": "e693",
+      "unicode_decimal": 59027
+    },
+    {
       "icon_id": "17511231",
       "name": "strikethrough",
       "font_class": "strikethrough",
