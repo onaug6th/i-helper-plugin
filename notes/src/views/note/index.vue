@@ -4,9 +4,9 @@
           @add="addNote"
           @more="state.showMore = true" />
 
-  <div class="more-container" :class="{ 'more-show': state.showMore }">
-    <div class="more-shade" @click="state.showMore = false"></div>
-    <div class="more-content">
+  <!-- 更多内容抽屉 -->
+  <Drawer v-model:visible="state.showMore">
+    <div>
       <ul class="colors">
         <li v-for="color in state.colors"
             :key="color"
@@ -21,7 +21,8 @@
         <span>笔记列表</span>
       </p>
     </div>
-  </div>
+  </Drawer>
+  <!-- 更多内容抽屉 -->
 
   <Editor :content="editContent"
           :backgroundColor="state.noteInfo.color"
@@ -30,14 +31,16 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
-import Editor from "./components/editor/index.vue";
 import { useRoute } from "vue-router";
+import Editor from "./components/editor/index.vue";
+import Drawer from "./components/drawer/index.vue";
 import Header from "../../components/header/index.vue";
 
 export default defineComponent({
   components: {
     Header,
     Editor,
+    Drawer,
   },
   setup() {
     const route = useRoute();

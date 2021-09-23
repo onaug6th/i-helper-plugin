@@ -1,95 +1,48 @@
-.more-container {
-  position: fixed;
-  top: 0;
+.colors {
+  height: 70px;
   width: 100%;
-  height: 100%;
-  z-index: -1;
-  transition: z-index 0.4s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  .more-shade {
-    position: absolute;
-    width: 100%;
+  li {
     height: 100%;
-    z-index: -1;
-    background-color: rgba(255, 255, 255, 0.6);
-    opacity: 0;
-    bottom: 0;
-    left: 0;
-    transition: all 0.4s;
-  }
-  .more-content {
-    position: absolute;
-    width: 100%;
-    z-index: 2;
-    top: -300px;
-    box-shadow: 0 0 4px #d9d9d9;
-    transition: top 0.4s;
-    background-color: #fff;
-  }
+    position: relative;
+    flex: 1;
 
-  .colors {
-    height: 70px;
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    li {
-      list-style: none;
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
       height: 100%;
-      position: relative;
-      flex: 1;
-
-      &::before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-      }
-      &:hover {
-        &::before {
-          background-color: rgba(0, 0, 0, 0.2);
-        }
-      }
-    }
-  }
-
-  .list {
-    width: 100%;
-    height: 50px;
-    font-size: 16px;
-    line-height: 50px;
-    color: #333;
-    display: block;
-    padding: 0 10px;
-    margin: 0px;
-
-    .iconfont {
-      margin-right: 10px;
+      top: 0;
+      left: 0;
     }
     &:hover {
-      background-color: #eeeeee;
-    }
-    &:active {
-      background-color: #f3f3f3;
+      &::before {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
     }
   }
 }
 
-.more-show {
-  z-index: 3;
-  transition: z-index 0.4s;
-  .more-content {
-    top: 0;
-    transition: top 0.4s;
+.list {
+  width: 100%;
+  height: 50px;
+  font-size: 16px;
+  line-height: 50px;
+  color: #333;
+  display: block;
+  padding: 0 10px;
+  margin: 0px;
+
+  .iconfont {
+    margin-right: 10px;
   }
-  .more-shade {
-    z-index: 1;
-    opacity: 1;
-    transition: all 0.4s;
+  &:hover {
+    background-color: #eeeeee;
+  }
+  &:active {
+    background-color: #f3f3f3;
   }
 }

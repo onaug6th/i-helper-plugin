@@ -1,6 +1,7 @@
 <template>
   <div class="editor-wrap">
-    <div class="editor-content" :style="editorStyle">
+    <div class="editor-content"
+         :style="editorStyle">
       <div v-html="content"
            ref="editor"
            class="editor"
@@ -11,12 +12,17 @@
            @contextmenu.prevent="contextMenu($event)"></div>
     </div>
 
-    <section class="tools" :style="editorStyle">
+    <Drawer v-model:visible="state.showMore" direction="bottom" :shade="false">
+      <Font-color @color-change="colorChange" />
+    </Drawer>
+
+    <section class="tools"
+             :style="editorStyle">
       <template v-for="item in icons"
-                :key="item.name">
+                :key="item.command">
         <button class="icon"
                 :title="item.title"
-                @click="editorIconHandle($event, item.name)">
+                @click="editorIconHandle($event, item)">
           <i class="iconfont"
              :class="item.icon"></i>
         </button>
@@ -26,50 +32,77 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, Ref, getCurrentInstance, computed } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  ref,
+  Ref,
+  getCurrentInstance,
+  computed,
+  reactive,
+} from "vue";
+import Drawer from "../drawer/index.vue";
+import useColor from "./composables/useColor";
+import FontColor from "./components/fontColor.vue";
 import * as utils from "../../../../utils";
 
 export default defineComponent({
+  components: {
+    FontColor,
+    Drawer,
+  },
   props: {
     content: String,
-    backgroundColor: String
+    backgroundColor: String,
   },
   emits: ["change"],
   setup(props, { emit }) {
     const { proxy }: any = getCurrentInstance();
+
+    const state = reactive({
+      showMore: false,
+    });
+
+    const { colorChoose, colorChange } = useColor({ state });
+
     //  编辑器索引
     const editor: Ref<HTMLDivElement | null> = ref(null);
     //  图标
     const icons = [
       {
-        name: "bold",
+        command: "bold",
         title: "加粗",
-        icon: "icon-editor-bold",
+        icon: "icon-01jiacu",
       },
       {
-        name: "italic",
+        command: colorChoose,
+        title: "字体颜色",
+        icon: "icon-24zitiyanse",
+      },
+      {
+        command: "italic",
         title: "斜体",
-        icon: "icon-italic",
+        icon: "icon-02xieti",
       },
       {
-        name: "underline",
+        command: "underline",
         title: "下划线",
-        icon: "icon-underline",
+        icon: "icon-03xiahuaxian",
       },
       {
-        name: "strikethrough",
+        command: "strikethrough",
         title: "删除线",
-        icon: "icon-strikethrough",
+        icon: "icon-04shanchuxian",
       },
       {
-        name: "insertUnorderedList",
+        command: "insertUnorderedList",
         title: "无序列表",
-        icon: "icon-ul",
+        icon: "icon-20xiangmufuhao",
       },
       {
-        name: "insertOrderedList",
+        command: "insertOrderedList",
         title: "有序列表",
-        icon: "icon-ol",
+        icon: "icon-21bianhaogeshi",
       },
     ];
     //  编辑器内容
@@ -77,9 +110,9 @@ export default defineComponent({
 
     const editorStyle = computed(() => {
       return {
-        backgroundColor: props.backgroundColor
-      }
-    })
+        backgroundColor: props.backgroundColor,
+      };
+    });
 
     onMounted(() => {
       content.value = props.content;
@@ -101,11 +134,17 @@ export default defineComponent({
     /**
      * 按钮点击事件处理
      * @param e
-     * @param name
+     * @param item
      */
-    function editorIconHandle(e: Event, name: string) {
-      e.preventDefault();
-      document.execCommand(name, false);
+    function editorIconHandle(e: Event, item: any) {
+      const command = item.command;
+
+      if (typeof command === "function") {
+        command();
+      } else {
+        e.preventDefault();
+        document.execCommand(command, false);
+      }
     }
 
     /**
@@ -168,10 +207,13 @@ export default defineComponent({
     }
 
     return {
+      state,
       editor,
       icons,
       content,
       editorStyle,
+
+      colorChange,
 
       editorIconHandle,
       contentChange,
