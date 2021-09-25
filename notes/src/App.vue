@@ -22,14 +22,5 @@ body {
   overflow-y: overlay;
 }
 
-ul {
-  margin: 0px;
-  padding: 0px;
-}
-
-li {
-  list-style: none;
-}
-
 @import "./assets/font/iconfont.css";
 </style>

@@ -3,10 +3,25 @@
   overflow-y: overlay;
   padding: 15px 10px;
 
-  &-top {
+  .title {
     font-weight: bold;
     margin-bottom: 10px;
     font-size: 20px;
+  }
+
+  .search {
+    margin-bottom: 15px;
+
+    input {
+      height: 30px;
+      line-height: 30px;
+      width: calc(100% - 26px);
+      outline: none;
+      padding: 0 12px;
+      border-radius: 4px;
+      border: 1px solid #dcdfe6;
+      background-color: #eee;
+    }
   }
 
   &-empty {
@@ -23,16 +38,17 @@
 .note-item {
   cursor: pointer;
   margin-bottom: 15px;
-  transition: .3s;
+  transition: 0.3s;
   border: 1px solid #ebeef5;
   border-radius: 4px;
   padding: 16px;
 
   &:hover {
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   }
 
   &__content {
+    font-size: 14px;
     display: -webkit-box;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -45,5 +61,6 @@
     text-align: right;
     color: #666;
     font-size: 13px;
+    margin-top: 10px;
   }
 }

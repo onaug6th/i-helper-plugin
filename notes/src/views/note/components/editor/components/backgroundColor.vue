@@ -8,6 +8,7 @@ import { defineComponent } from "vue";
 import ColorChoose from "../../../../../components/colorChoose/index.vue";
 
 export default defineComponent({
+  name: 'backgroundColor',
   components: {
     ColorChoose,
   },
@@ -35,7 +36,7 @@ export default defineComponent({
      * 改变颜色
      */
     function colorChange(color: string) {
-      document.execCommand('ForeColor', false, color);
+      document.execCommand('BackColor', false, color);
       emit('done');
     }
 

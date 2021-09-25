@@ -216,5 +216,8 @@ export default defineComponent({
       background-color: rgba(0, 0, 0, 0.1);
     }
   }
+  &:active {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 }
 </style>

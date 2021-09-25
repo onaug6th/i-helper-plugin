@@ -12,21 +12,24 @@
            @contextmenu.prevent="contextMenu($event)"></div>
     </div>
 
-    <Drawer v-model:visible="state.showMore" direction="bottom" :shade="false">
-      <Font-color @color-change="colorChange" />
+    <Drawer v-model:visible="state.showDrawer"
+            direction="bottom"
+            :shade="false">
+      <Font-color v-if="isDrawerType('fontColor')" @done="closeDrawer" />
+      <Background-color v-else-if="isDrawerType('backgroundColor')" @done="closeDrawer" />
     </Drawer>
 
     <section class="tools"
              :style="editorStyle">
-      <template v-for="item in icons"
-                :key="item.command">
-        <button class="icon"
-                :title="item.title"
-                @click="editorIconHandle($event, item)">
-          <i class="iconfont"
-             :class="item.icon"></i>
-        </button>
-      </template>
+
+      <button v-for="item in icons"
+              class="icon"
+              :title="item.title"
+              :key="item.command"
+              @click="editorIconHandle($event, item)">
+        <i class="iconfont"
+           :class="item.icon"></i>
+      </button>
     </section>
   </div>
 </template>
@@ -41,15 +44,17 @@ import {
   computed,
   reactive,
 } from "vue";
-import Drawer from "../drawer/index.vue";
-import useColor from "./composables/useColor";
+
+import Drawer from "../../../../components/drawer/index.vue";
 import FontColor from "./components/fontColor.vue";
+import BackgroundColor from "./components/backgroundColor.vue";
 import * as utils from "../../../../utils";
 
 export default defineComponent({
   components: {
-    FontColor,
     Drawer,
+    FontColor,
+    BackgroundColor,
   },
   props: {
     content: String,
@@ -60,10 +65,9 @@ export default defineComponent({
     const { proxy }: any = getCurrentInstance();
 
     const state = reactive({
-      showMore: false,
+      showDrawer: false,
+      drawerType: "",
     });
-
-    const { colorChoose, colorChange } = useColor({ state });
 
     //  编辑器索引
     const editor: Ref<HTMLDivElement | null> = ref(null);
@@ -75,9 +79,14 @@ export default defineComponent({
         icon: "icon-01jiacu",
       },
       {
-        command: colorChoose,
+        drawerType: "fontColor",
         title: "字体颜色",
         icon: "icon-24zitiyanse",
+      },
+      {
+        drawerType: "backgroundColor",
+        title: "背景颜色",
+        icon: "icon-19beijingyanse",
       },
       {
         command: "italic",
@@ -120,6 +129,21 @@ export default defineComponent({
     });
 
     /**
+     * 是否抽屉类型
+     * @param { string } drawerType
+     */
+    function isDrawerType(drawerType: string) {
+      return state.drawerType === drawerType;
+    }
+
+    /**
+     * 关闭抽屉
+     */
+    function closeDrawer() {
+      state.showDrawer = false;
+    }
+
+    /**
      * 聚焦编辑器
      */
     function focus() {
@@ -137,10 +161,11 @@ export default defineComponent({
      * @param item
      */
     function editorIconHandle(e: Event, item: any) {
-      const command = item.command;
+      const { drawerType, command } = item;
 
-      if (typeof command === "function") {
-        command();
+      if (drawerType) {
+        state.drawerType = drawerType;
+        state.showDrawer = true;
       } else {
         e.preventDefault();
         document.execCommand(command, false);
@@ -213,7 +238,8 @@ export default defineComponent({
       content,
       editorStyle,
 
-      colorChange,
+      isDrawerType,
+      closeDrawer,
 
       editorIconHandle,
       contentChange,

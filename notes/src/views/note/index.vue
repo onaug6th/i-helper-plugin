@@ -7,14 +7,7 @@
   <!-- 更多内容抽屉 -->
   <Drawer v-model:visible="state.showMore">
     <div>
-      <ul class="colors">
-        <li v-for="color in state.colors"
-            :key="color"
-            :style="{
-              backgroundColor: color
-            }"
-            @click="changeColor(color)"></li>
-      </ul>
+      <ColorChoose @color-change="changeColor" />
 
       <p class="list" @click="openList">
         <i class="iconfont icon-list"></i>
@@ -33,7 +26,8 @@
 import { defineComponent, onBeforeMount, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 import Editor from "./components/editor/index.vue";
-import Drawer from "./components/drawer/index.vue";
+import Drawer from "../../components/drawer/index.vue";
+import ColorChoose from "../../components/colorChoose/index.vue";
 import Header from "../../components/header/index.vue";
 
 export default defineComponent({
@@ -41,6 +35,7 @@ export default defineComponent({
     Header,
     Editor,
     Drawer,
+    ColorChoose,
   },
   setup() {
     const route = useRoute();
@@ -50,16 +45,6 @@ export default defineComponent({
     const state: any = reactive({
       //  是否展示更多
       showMore: false,
-      //  可修改的颜色列表
-      colors: [
-        "#ffe66e",
-        "#a1ef9b",
-        "#ffafdf",
-        "#d7afff",
-        "#9edfff",
-        "#e0e0e0",
-        "#767676"
-      ],
       //  便笺信息
       noteInfo: {}
     });

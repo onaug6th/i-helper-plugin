@@ -3,10 +3,17 @@
           :btns="['add', 'pin', 'close']"
           @add="addNote" />
   <div class="notes">
-    <div class="notes-top">
+    <div class="title">
       便笺
     </div>
-    <div v-for="(note, noteIndex) in state.notes"
+
+    <div class="search">
+      <input v-model="state.searchText"
+             type="text"
+             placeholder="搜索…" />
+    </div>
+
+    <div v-for="(note, noteIndex) in showNotes"
          class="note-item"
          shadow="hover"
          title="打开便笺"
@@ -17,7 +24,7 @@
          @click="openNoteWin(note)"
          @contextmenu.prevent="contextMenu($event, note, noteIndex)">
       <div>
-        <div v-html="note.content || '新的便笺'"
+        <div v-html="note.showContent || '新的便笺'"
              class="note-item__content">
         </div>
         <div class="note-item__date">
@@ -25,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!state.notes.length"
+    <div v-if="!showNotes.length"
          class="notes-empty">
       暂无内容哦
     </div>
@@ -38,6 +45,7 @@ import {
   onBeforeMount,
   reactive,
   getCurrentInstance,
+  computed,
 } from "vue";
 import { NoteItem } from "./types";
 import dayjs from "dayjs";
@@ -49,9 +57,17 @@ export default defineComponent({
   },
   setup() {
     const state: {
+      searchText: string;
       notes: Array<any>;
     } = reactive({
+      searchText: "",
       notes: [],
+    });
+
+    const showNotes = computed(() => {
+      return state.notes.filter((note) => {
+        return note.content.includes(state.searchText);
+      });
     });
 
     const { proxy }: any = getCurrentInstance();
@@ -61,8 +77,14 @@ export default defineComponent({
      */
     function getAllNotes(): void {
       const data = iHelper.db.find();
-      state.notes = data;
-      console.info(data);
+      state.notes = data.map((note) => {
+        const index = 80;
+        const textOnIndexIsBrackets = note.content[index] === "<";
+        //  为了降低渲染压力
+        note.showContent =
+          note.content.slice(0, textOnIndexIsBrackets ? index : index + 1) + "...";
+        return note;
+      });
     }
 
     /**
@@ -70,10 +92,9 @@ export default defineComponent({
      */
     function addNote(): void {
       const res = iHelper.db.insert({
-        content: ""
+        content: "",
       });
-      const winId = openNote(res._id);
-      res.winId = winId;
+      openNote(res._id);
       state.notes.unshift(res);
     }
 
@@ -102,8 +123,7 @@ export default defineComponent({
      * 打开便笺窗体
      */
     function openNoteWin(note): void {
-      const winId = openNote(note._id);
-      note.winId = winId;
+      openNote(note._id);
     }
 
     /**
@@ -120,9 +140,11 @@ export default defineComponent({
      * @param noteIndex
      */
     function deleteNote(note: NoteItem, noteIndex: number): void {
-      const viewId = iHelper.getPluginWinsInfo().filter(({ viewUrl }) => viewUrl.includes(note._id))[0]?.viewId;
+      const viewId = iHelper
+        .getPluginWinsInfo()
+        .filter(({ viewUrl }) => viewUrl.includes(note._id))[0]?.viewId;
 
-      if(viewId) {
+      if (viewId) {
         //  关闭被删除便笺的窗口
         iHelper.send(viewId, "note-delete");
       }
@@ -197,13 +219,14 @@ export default defineComponent({
 
     return {
       state,
+      showNotes,
 
       formatDate,
 
       addNote,
       openNote,
       openNoteWin,
-      contextMenu
+      contextMenu,
     };
   },
 });
