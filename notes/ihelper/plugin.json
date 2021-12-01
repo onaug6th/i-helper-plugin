@@ -3,7 +3,7 @@
   "name": "便笺",
   "desc": "随时随地记录内容",
   "main": "dist/index.html",
-  "version": "0.0.22",
+  "version": "0.0.25",
   "logo": "logo.gif",
   "preload": "preload.js",
   "dev": {
@@ -13,7 +13,8 @@
   "winOptions": {
     "width": 320,
     "height": 635,
-    "minWidth": 250
+    "minWidth": 250,
+    "minHeight": 320
   },
   "header": {
     "show": false

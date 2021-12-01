@@ -3,14 +3,15 @@
           :btns="['add', 'pin', 'close']"
           @add="addNote" />
   <div class="notes">
-    <div class="title">
+    <div class="title" :title="title">
       便笺
     </div>
 
     <div class="search">
       <input v-model="state.searchText"
              type="text"
-             placeholder="搜索…" />
+             placeholder="搜索…"
+             title="搜索便笺内容" />
     </div>
 
     <div v-for="(note, noteIndex) in showNotes"
@@ -24,7 +25,7 @@
          @click="openNoteWin(note)"
          @contextmenu.prevent="contextMenu($event, note, noteIndex)">
       <div>
-        <div v-html="note.showContent || '新的便笺'"
+        <div v-html="note.content || '新的便笺'"
              class="note-item__content">
         </div>
         <div class="note-item__date">
@@ -70,6 +71,10 @@ export default defineComponent({
       });
     });
 
+    const title = computed(() => {
+      return `共有便笺${state.notes.length}条          :)`
+    });
+
     const { proxy }: any = getCurrentInstance();
 
     /**
@@ -77,14 +82,7 @@ export default defineComponent({
      */
     function getAllNotes(): void {
       const data = iHelper.db.find();
-      state.notes = data.map((note) => {
-        const index = 80;
-        const textOnIndexIsBrackets = note.content[index] === "<";
-        //  为了降低渲染压力
-        note.showContent =
-          note.content.slice(0, textOnIndexIsBrackets ? index : index + 1) + "...";
-        return note;
-      });
+      state.notes = data;
     }
 
     /**
@@ -220,6 +218,7 @@ export default defineComponent({
     return {
       state,
       showNotes,
+      title,
 
       formatDate,
 
