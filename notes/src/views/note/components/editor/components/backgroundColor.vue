@@ -49,32 +49,5 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.colors {
-  height: 70px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  user-select: none;
 
-  li {
-    height: 100%;
-    position: relative;
-    flex: 1;
-
-    &::before {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-    }
-    &:hover {
-      &::before {
-        background-color: rgba(0, 0, 0, 0.2);
-      }
-    }
-  }
-}
 </style>

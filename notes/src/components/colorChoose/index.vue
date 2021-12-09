@@ -51,6 +51,7 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   align-items: center;
+  user-select: none;
 
   li {
     height: 100%;

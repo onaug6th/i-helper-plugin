@@ -6,6 +6,34 @@
   "description": "i-helper notes",
   "glyphs": [
     {
+      "icon_id": "7009048",
+      "name": "packup",
+      "font_class": "packup",
+      "unicode": "e749",
+      "unicode_decimal": 59209
+    },
+    {
+      "icon_id": "7009049",
+      "name": "unfold",
+      "font_class": "unfold",
+      "unicode": "e74a",
+      "unicode_decimal": 59210
+    },
+    {
+      "icon_id": "29929",
+      "name": "emoji",
+      "font_class": "emoji",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "19296225",
+      "name": "13标题1",
+      "font_class": "13biaoti1",
+      "unicode": "e68d",
+      "unicode_decimal": 59021
+    },
+    {
       "icon_id": "19296364",
       "name": "19背景颜色",
       "font_class": "19beijingyanse",

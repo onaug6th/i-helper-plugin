@@ -10,7 +10,7 @@
     </button>
 
     <button v-if="hasBtn('more')" class="icon" @click="more">
-      <i class="iconfont icon-code" :title="moreTitle"></i>
+      <i class="iconfont icon-emoji" :title="moreTitle"></i>
     </button>
 
     </div>

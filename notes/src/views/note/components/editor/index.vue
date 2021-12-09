@@ -17,6 +17,7 @@
             :shade="false">
       <Font-color v-if="isDrawerType('fontColor')" @done="closeDrawer" />
       <Background-color v-else-if="isDrawerType('backgroundColor')" @done="closeDrawer" />
+      <Font-size v-else-if="isDrawerType('fontSize')" @done="closeDrawer" />
     </Drawer>
 
     <section class="tools"
@@ -48,6 +49,7 @@ import {
 import Drawer from "../../../../components/drawer/index.vue";
 import FontColor from "./components/fontColor.vue";
 import BackgroundColor from "./components/backgroundColor.vue";
+import FontSize from "./components/fontSize.vue";
 import * as utils from "../../../../utils";
 
 export default defineComponent({
@@ -55,6 +57,7 @@ export default defineComponent({
     Drawer,
     FontColor,
     BackgroundColor,
+    FontSize
   },
   props: {
     content: String,
@@ -73,6 +76,11 @@ export default defineComponent({
     const editor: Ref<HTMLDivElement | null> = ref(null);
     //  图标
     const icons = [
+      {
+        drawerType: "fontSize",
+        title: "字体大小",
+        icon: "icon-13biaoti1",
+      },
       {
         command: "bold",
         title: "加粗",
